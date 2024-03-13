@@ -5,7 +5,7 @@ from pref_voting.margin_based_methods import beat_path as beat_path_faster
 from pref_voting.weighted_majority_graphs import MarginGraph
 from pref_voting.other_methods import bucklin
 from pref_voting.iterative_methods import coombs
-from ownmethods import coombs_with_uniform_truncation, bucklin_with_uniform_truncation, plurality_with_runoff_profile_with_ties, truncate_profile
+from ownmethods import coombs_with_uniform_truncation, bucklin_with_uniform_truncation, plurality_with_runoff_profile_with_ties, truncate_profile_uniformly, truncate_profile_probabilistically
 import csv
 
 import matplotlib.pyplot as plt
@@ -20,7 +20,11 @@ candidates = [4,5,6,7]
 voters = [100,200,300,400,500,600, 2000]
 dispersion_values = [0.7,0.8,0.9,1]
 
-
+# Probability models:
+probability_models = {4: [0.5744624951135919, 0.07014791043554941, 0.010189183538032163, 0.3452004109128265],
+5: [0.6296228387845766, 0.07036969294216873, 0.018869240820955528, 0.004423945698945408, 0.2767142817533538],
+6: [0.6167639840605066, 0.08185508198359971, 0.03812115871362543, 0.008904520940563022, 0.0062718298205612436, 0.248083424481144],
+7: [0.6097431871894862, 0.08698258554486002, 0.04149472859529119, 0.019716119160653467, 0.00429439528521086, 0.005497163261379343, 0.23227182096311894]}
 
 # Nested for loops run through the various permutations of the test
 for candidate_value in candidates:
@@ -43,6 +47,7 @@ for candidate_value in candidates:
 
                 # Puts the ranking into a usable form
                 prof = Profile(prof[0], prof[1])
+                prof = truncate_profile_probabilistically(prof, probability_models[candidate_value])
 
                 #Records the true winners under each voting system
                 true_beat_path = beat_path_faster(prof)
@@ -53,7 +58,7 @@ for candidate_value in candidates:
 
                 # Runs through the different truncation levels for each profile
                 for ballot_length in range(1,candidate_value + 1):
-                    new_prof = truncate_profile(prof, ballot_length)
+                    new_prof = truncate_profile_uniformly(prof, ballot_length)
                     new_prof.use_extended_strict_preference()
 
                     # Keeps track of each voting system's winners at the level of truncation

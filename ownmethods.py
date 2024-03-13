@@ -1,8 +1,9 @@
 from pref_voting.profiles import Profile
 from pref_voting.profiles_with_ties import ProfileWithTies, Ranking
 from itertools import permutations, product
+import random
 
-def truncate_profile(profile, length):
+def truncate_profile_uniformly(profile, length):
     '''
     Takes an input of a previously created profile along with the ballot length at which the truncation should take place
 
@@ -17,7 +18,30 @@ def truncate_profile(profile, length):
     for r in lprof.rankings:
         truncate_at = length
         truncated_r = r[0:truncate_at]
-        #print(f"the length of the ballot is {len(truncated_r)}")
+
+        rmap = {c: _r + 1 for _r, c in enumerate(truncated_r)}
+
+        rmaps.append(rmap)
+
+    return ProfileWithTies(
+        rmaps,
+        cmap=lprof.cmap,
+        candidates=lprof.candidates
+    )
+
+def truncate_profile_probabilistically(profile, distribution):
+    '''
+    Assumes that profile has rankings with uniform length
+    '''
+    lprof = profile
+    max_ballot_length = len(lprof.rankings[0])
+    if max_ballot_length != len(distribution):
+        raise Exception("Distribution size doesn't match number of candidates")
+
+    rmaps = list()
+    for r in lprof.rankings:
+        truncate_at = random.choices(range(1,max_ballot_length + 1), weights = distribution, k=1)[0]
+        truncated_r = r[0:truncate_at]
 
         rmap = {c: _r + 1 for _r, c in enumerate(truncated_r)}
 
