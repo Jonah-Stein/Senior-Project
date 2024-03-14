@@ -56,6 +56,10 @@ def truncate_profile_probabilistically(profile, distribution):
 '''
 Takes an input of type 'Profile_With_Ties'
 '''
+
+def bucklin_with_variable_lengths(profile):
+    return None
+
 def bucklin_with_uniform_truncation(profile, length = None):
     length = length if length is not None else profile.num_cands
     majority = profile.strict_maj_size()

@@ -17,8 +17,8 @@ data_writer = csv.writer(data_file)
 # Variables for the simulation
 times_per_permutation = 1000
 candidates = [4,5,6,7]
-voters = [100,200,300,400,500,600, 2000]
-dispersion_values = [0.7,0.8,0.9,1]
+voters = [100,200,300,400,500,600,2000]
+dimension_values = [4,5,6,7]
 
 # Probability models:
 probability_models = {4: [0.5744624951135919, 0.07014791043554941, 0.010189183538032163, 0.3452004109128265],
@@ -29,8 +29,8 @@ probability_models = {4: [0.5744624951135919, 0.07014791043554941, 0.01018918353
 # Nested for loops run through the various permutations of the test
 for candidate_value in candidates:
     for voter_value in voters:
-        for dispersion_value in dispersion_values:
-            print(f"candidates: {candidate_value} voters: {voter_value} dispersion value: {dispersion_value}")
+        for dimension_value in dimension_values:
+            print(f"candidates: {candidate_value} voters: {voter_value} dimension value: {dimension_value}")
             # The success at each length with index 0 correlating to length 1 and so on
             success_at_length_beat_path = [0,0,0,0,0,0,0,0]
             success_at_length_bucklin = [0,0,0,0,0,0,0,0]
@@ -43,7 +43,7 @@ for candidate_value in candidates:
                     print(i)
 
                 # Creates Rankings
-                prof = create_rankings_mallows(candidate_value, voter_value, dispersion_value)
+                prof = generate_profile(candidate_value, voter_value, "Spatial", [dimension_value, None]).to_linear_profile()
 
                 # Puts the ranking into a usable form
                 prof = Profile(prof[0], prof[1])
@@ -125,20 +125,20 @@ for candidate_value in candidates:
             plt.plot(xcoombs, ycoombs, label = "Coombs", marker = '.')
             plt.xlabel = "Ballot Length"
             plt.ylabel = "Probability that true winners are chosen"
-            plt.title(f"Candidates: {candidate_value}, Voters: {voter_value}, Dispersion Value: {dispersion_value}")
+            plt.title(f"Candidates: {candidate_value}, Voters: {voter_value}, Dimension Value: {dimension_value}")
             plt.legend()
             plt.yticks([0,0.2,0.4,0.6,0.8,1.0])
             plt.xticks([x for x in range(1, ballot_length + 1)])
 
             # Saves the graph of the permuation of variables
-            plt.savefig(f"graphs/{candidate_value}cands-{voter_value}voters-{dispersion_value}dispersion.png", dpi=600)
+            plt.savefig(f"graphs/{candidate_value}cands-{voter_value}voters-{dimension_value}dimensions.png", dpi=600)
             plt.clf()
             
             # Records the data into the csv
-            data_writer.writerow([candidate_value, voter_value, dispersion_value, "Schulze", success_at_length_beat_path[0], success_at_length_beat_path[1],success_at_length_beat_path[2],success_at_length_beat_path[3],success_at_length_beat_path[4],success_at_length_beat_path[5],success_at_length_beat_path[6]])
-            data_writer.writerow([candidate_value, voter_value, dispersion_value, "Bucklin", success_at_length_bucklin[0], success_at_length_bucklin[1],success_at_length_bucklin[2],success_at_length_bucklin[3],success_at_length_bucklin[4],success_at_length_bucklin[5],success_at_length_bucklin[6]])
-            data_writer.writerow([candidate_value, voter_value, dispersion_value, "Plurality With Runoff", success_at_length_plurality_with_runoff[0], success_at_length_plurality_with_runoff[1],success_at_length_plurality_with_runoff[2],success_at_length_plurality_with_runoff[3],success_at_length_plurality_with_runoff[4],success_at_length_plurality_with_runoff[5],success_at_length_plurality_with_runoff[6]])
-            data_writer.writerow([candidate_value, voter_value, dispersion_value, "Coombs", success_at_length_coombs[0], success_at_length_coombs[1],success_at_length_coombs[2],success_at_length_coombs[3],success_at_length_coombs[4],success_at_length_coombs[5],success_at_length_coombs[6]])
+            data_writer.writerow([candidate_value, voter_value, dimension_value, "Schulze", success_at_length_beat_path[0], success_at_length_beat_path[1],success_at_length_beat_path[2],success_at_length_beat_path[3],success_at_length_beat_path[4],success_at_length_beat_path[5],success_at_length_beat_path[6]])
+            data_writer.writerow([candidate_value, voter_value, dimension_value, "Bucklin", success_at_length_bucklin[0], success_at_length_bucklin[1],success_at_length_bucklin[2],success_at_length_bucklin[3],success_at_length_bucklin[4],success_at_length_bucklin[5],success_at_length_bucklin[6]])
+            data_writer.writerow([candidate_value, voter_value, dimension_value, "Plurality With Runoff", success_at_length_plurality_with_runoff[0], success_at_length_plurality_with_runoff[1],success_at_length_plurality_with_runoff[2],success_at_length_plurality_with_runoff[3],success_at_length_plurality_with_runoff[4],success_at_length_plurality_with_runoff[5],success_at_length_plurality_with_runoff[6]])
+            data_writer.writerow([candidate_value, voter_value, dimension_value, "Coombs", success_at_length_coombs[0], success_at_length_coombs[1],success_at_length_coombs[2],success_at_length_coombs[3],success_at_length_coombs[4],success_at_length_coombs[5],success_at_length_coombs[6]])
             print("RECORDED \n RECORDED \n RECORDED")
 
 
