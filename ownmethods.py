@@ -18,7 +18,6 @@ def truncate_profile_uniformly(profile, length):
     print(type(profile))
     if type(lprof.rankings[0]) == 'tuple':
         for r in lprof.rankings:
-            print(r)
             truncate_at = length
             if len(r.cands) <= truncate_at:
                 continue
@@ -29,9 +28,9 @@ def truncate_profile_uniformly(profile, length):
             rmaps.append(rmap)
     else: 
         for r in lprof.rankings:
-            print(r)
             truncate_at = length
             if len(r.cands) <= truncate_at:
+                rmaps.append(r.rmap)
                 continue
             truncated_r = dict(list(r.rmap.items())[0:truncate_at])
 
