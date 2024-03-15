@@ -15,13 +15,27 @@ def truncate_profile_uniformly(profile, length):
     lprof = profile
     
     rmaps = list()
-    for r in lprof.rankings:
-        truncate_at = length
-        truncated_r = r[0:truncate_at]
+    print(type(profile))
+    if type(lprof.rankings[0]) == 'tuple':
+        for r in lprof.rankings:
+            print(r)
+            truncate_at = length
+            if len(r.cands) <= truncate_at:
+                continue
+            truncated_r = r[0:truncate_at]
 
-        rmap = {c: _r + 1 for _r, c in enumerate(truncated_r)}
+            rmap = {c: _r + 1 for _r, c in enumerate(truncated_r)}
 
-        rmaps.append(rmap)
+            rmaps.append(rmap)
+    else: 
+        for r in lprof.rankings:
+            print(r)
+            truncate_at = length
+            if len(r.cands) <= truncate_at:
+                continue
+            truncated_r = dict(list(r.rmap.items())[0:truncate_at])
+
+            rmaps.append(truncated_r)
 
     return ProfileWithTies(
         rmaps,

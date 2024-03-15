@@ -8,15 +8,23 @@ from ownmethods import coombs_with_uniform_truncation, bucklin_with_uniform_trun
 import csv
 
 # Creates Rankings
-prof = create_rankings_mallows(4, 100, 0.5)
+prof = create_rankings_mallows(4, 3, 0.5)
 distribution = [0.5744624951135919, 0.07014791043554941, 0.010189183538032163, 0.3452004109128265]
+distribution = [0,0,0,1]
 # Puts the ranking into a usable form
 prof = Profile(prof[0], prof[1])
 print(prof.rankings)
+print(type(prof.rankings[0]))
 # new_prof = truncate_profile_uniformly(prof, 2)
 
 new_prof = truncate_profile_probabilistically(prof, distribution)
-print(len(new_prof.rankings))
+for r in new_prof.rankings:
+    sliced = list(r.rmap.items())[:2]
+    print(sliced)
+    print(dict(sliced))
+
+    #print(r.rmap.keys())
+
+new_prof = truncate_profile_uniformly(new_prof, 3)
 for r in new_prof.rankings:
     print(r.rmap)
-
