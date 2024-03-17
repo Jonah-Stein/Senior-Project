@@ -15,13 +15,13 @@ distribution = [0.5744624951135919, 0.07014791043554941, 0.010189183538032163, 0
 prof = Profile(prof[0], prof[1])
 print(prof.rankings)
 print(type(prof.rankings[0]))
-# new_prof = truncate_profile_uniformly(prof, 2)
+new_prof = truncate_profile_uniformly(prof, 2)
 
-new_prof = truncate_profile_probabilistically(prof, distribution)
-for r in new_prof.rankings:
-    sliced = list(r.rmap.items())[:2]
-    print(sliced)
-    print(dict(sliced))
+# new_prof = truncate_profile_probabilistically(prof, distribution)
+# for r in new_prof.rankings:
+#     sliced = list(r.rmap.items())[:2]
+#     print(sliced)
+#     print(dict(sliced))
 
     #print(r.rmap.keys())
 print("NEW RANKINGS")
