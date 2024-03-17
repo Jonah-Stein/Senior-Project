@@ -2,76 +2,23 @@ from pref_voting.profiles import Profile
 from pref_voting.profiles_with_ties import ProfileWithTies, Ranking
 from itertools import permutations, product
 import random
+def bucklin_with_variable_lengths1(profile):
+    winners = list()
+    majority = profile.strict_maj_size()
+    cand_scores = list()
+    for i in range(profile.num_cands):
+        cand_scores.append(0)
 
-def truncate_profile_uniformly(profile, length):
-    '''
-    Takes an input of a previously created profile along with the ballot length at which the truncation should take place
+    ballot_pool = [rank for rank in profile.rankings]
+    while max(cand_scores) < majority and len(ballot_pool) > 0:
+        for ballot in ballot_pool:
+            cand_scores[ballot.cands_at_rank(round)[0]] += 1
+        
+        round += 1
 
-    Returns a profile with ties
+    return winners
 
-    Based off of generate_truncated_profile function
-    '''
-    
-    lprof = profile
-    
-    rmaps = list()
-    if isinstance(lprof.rankings[0], tuple):
-        for r in lprof.rankings:
-            truncate_at = length
-            if len(r) <= truncate_at:
-                rmaps.append(r)
-                continue
-            truncated_r = r[0:truncate_at]
-
-            rmap = {c: _r + 1 for _r, c in enumerate(truncated_r)}
-
-            rmaps.append(rmap)
-    else: 
-        for r in lprof.rankings:
-            truncate_at = length
-            if len(r.cands) <= truncate_at:
-                rmaps.append(r.rmap)
-                continue
-            truncated_r = dict(list(r.rmap.items())[0:truncate_at])
-
-            rmaps.append(truncated_r)
-
-    return ProfileWithTies(
-        rmaps,
-        cmap=lprof.cmap,
-        candidates=lprof.candidates
-    )
-
-def truncate_profile_probabilistically(profile, distribution):
-    '''
-    Assumes that profile has rankings with uniform length
-    '''
-    lprof = profile
-    print(lprof.rankings)
-    max_ballot_length = len(lprof.rankings[0])
-    if max_ballot_length != len(distribution):
-        raise Exception("Distribution size doesn't match number of candidates")
-
-    rmaps = list()
-    for r in lprof.rankings:
-        truncate_at = random.choices(range(1,max_ballot_length + 1), weights = distribution, k=1)[0]
-        truncated_r = r[0:truncate_at]
-
-        rmap = {c: _r + 1 for _r, c in enumerate(truncated_r)}
-
-        rmaps.append(rmap)
-
-    return ProfileWithTies(
-        rmaps,
-        cmap=lprof.cmap,
-        candidates=lprof.candidates
-    )
-
-'''
-Takes an input of type 'Profile_With_Ties'
-'''
-
-def bucklin_with_uniform_truncation(profile, length = None):
+def bucklin_with_variable_lengths(profile):
     length = length if length is not None else profile.num_cands
     majority = profile.strict_maj_size()
     cand_scores = list()
