@@ -3,7 +3,7 @@ from pref_voting.profiles_with_ties import ProfileWithTies, Ranking
 from itertools import permutations, product
 import random
 
-def truncate_profile_uniformly(profile, length):
+def truncate_profile_uniformly(profile, length, oldcandidates):
     '''
     Takes an input of a previously created profile along with the ballot length at which the truncation should take place
 
@@ -11,9 +11,8 @@ def truncate_profile_uniformly(profile, length):
 
     Based off of generate_truncated_profile function
     '''
-    
     lprof = profile
-    
+
     rmaps = list()
     if isinstance(lprof.rankings[0], tuple):
         for r in lprof.rankings:
@@ -35,11 +34,10 @@ def truncate_profile_uniformly(profile, length):
             truncated_r = dict(list(r.rmap.items())[0:truncate_at])
 
             rmaps.append(truncated_r)
-
+    
     return ProfileWithTies(
         rmaps,
-        cmap=lprof.cmap,
-        candidates=lprof.candidates
+        candidates=oldcandidates
     )
 
 def truncate_profile_probabilistically(profile, distribution):
@@ -47,7 +45,6 @@ def truncate_profile_probabilistically(profile, distribution):
     Assumes that profile has rankings with uniform length
     '''
     lprof = profile
-    print(lprof.rankings)
     max_ballot_length = len(lprof.rankings[0])
     if max_ballot_length != len(distribution):
         raise Exception("Distribution size doesn't match number of candidates")
