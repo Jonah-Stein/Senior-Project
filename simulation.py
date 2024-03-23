@@ -12,7 +12,7 @@ import csv
 import matplotlib.pyplot as plt
 
 # Writes the data to a csv file for later analysis
-#data_file = open("data.csv", "w")
+data_file = open("data.csv", "w")
 data_writer = csv.writer(data_file)
 
 # Variables for the simulation
