@@ -6,8 +6,8 @@ df = pd.read_csv('headered-final-data.csv')
 df.replace(0, pd.NA, inplace=True)
 
 methodnames = ['Schulze', 'Bucklin', 'Plurality With Runoff', 'Coombs']
-dimension_values = [100,200,300,400,500,600,2000]
-for c in dimension_values:
+voter_values = [100,200,300,400,500,600,2000]
+for c in voter_values:
     plt.figure(figsize=(10, 6))
 
     cfiltered_df = df[(df['Voters'] == c)]
