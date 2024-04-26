@@ -8,6 +8,8 @@ from ownmethods import coombs_with_uniform_truncation, bucklin_with_uniform_trun
 from refinedvotingmethods import bucklin_with_variable_lengths
 import csv
 
+
+
 # Creates Rankings
 prof = create_rankings_mallows(4, 100, 0.5)
 distribution = [0.5744624951135919, 0.07014791043554941, 0.010189183538032163, 0.3452004109128265]
